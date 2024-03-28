@@ -26,3 +26,5 @@ vine==5.1.0
 wcwidth==0.2.13
 python-dotenv
 psycopg2-binary
+django-import-export
+django-unfold

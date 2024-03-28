@@ -1,16 +1,22 @@
 from pathlib import Path
 from os import getenv
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-h7o83$*b0dpcpn_-uz8g_e)nm%!0v4z0fsx=()fbfp*+h0=%r&'
 
-DEBUG = getenv('DEBUG', 'False') == 'True'
+# DEBUG = getenv('DEBUG', 'False') == 'True'
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
+    "unfold",
+    "unfold.contrib.filters", 
+    "unfold.contrib.forms", 
+    "unfold.contrib.import_export",  
+    "unfold.contrib.guardian",
+    "unfold.contrib.simple_history", 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

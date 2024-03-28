@@ -5,7 +5,7 @@ echo ====================================
 
 echo "Collecting Static Files..." 
 python manage.py collectstatic --noinput
-echo ====================================  
+echo ==================================== 
 
 echo "Starting Migrations..." 
 python manage.py migrate 

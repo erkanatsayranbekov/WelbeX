@@ -1,7 +1,7 @@
 #!/bin/bash 
 echo "Creating Migrations..." 
-python manage.py makemigrations app 
-echo ====================================  
+python manage.py makemigrations app
+echo ====================================
 
 echo "Collecting Static Files..." 
 python manage.py collectstatic --noinput

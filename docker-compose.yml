@@ -15,6 +15,9 @@ services:
       - DEBUG=False
     depends_on:
       - db
+      - redis
+      - celery_beat
+      - celery_worker
 
   db:
     container_name: db
@@ -27,6 +30,47 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  celery_beat:
+    container_name: celery_beat
+    build: .
+    command: celery -A WelbeX beat -l INFO -S django
+    environment:
+      - C_FORCE_ROOT=true
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DJANGO_SETTINGS_MODULE=WelbeX.settings
+    depends_on:
+      - redis
+      - db
+      - celery_worker
+    volumes:
+      - .:/app
+      - /usr/local/lib/python3.9/site-packages/
+      - /usr/lib/python3.9/site-packages/
+
+  celery_worker:
+    container_name: celery_worker
+    build: .
+    command: celery -A WelbeX worker --loglevel=INFO -P eventlet
+    environment:
+      - C_FORCE_ROOT=true
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DJANGO_SETTINGS_MODULE=WelbeX.settings
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - .:/app
+      - /usr/local/lib/python3.9/site-packages/
+      - /usr/lib/python3.9/site-packages/
 
 volumes:
   pgdata: {}

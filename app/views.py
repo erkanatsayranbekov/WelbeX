@@ -24,9 +24,6 @@ class CargoViewSet(viewsets.ModelViewSet):
         delivery = serializer.validated_data['delivery']
         serializer.save(pick_up=pick_up, delivery=delivery)
 
-         
-    
-
     def get_queryset(self):
         queryset = super().get_queryset()
         pick_up = self.request.query_params.get('pick_up', None)
@@ -80,9 +77,6 @@ class CargoViewSet(viewsets.ModelViewSet):
         data['vehicles_in_range'] = vehicles_in_range
         return Response(data)
 
-
 class VehicleViewSet(viewsets.ModelViewSet):
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer     
-
-

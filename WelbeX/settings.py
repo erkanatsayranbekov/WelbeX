@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 from os import getenv
 
@@ -5,8 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-h7o83$*b0dpcpn_-uz8g_e)nm%!0v4z0fsx=()fbfp*+h0=%r&'
 
-# DEBUG = getenv('DEBUG', 'False') == 'True'
-DEBUG = True
+DEBUG = getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
+    'django_celery_beat',
     'app'
 ]
 
@@ -107,9 +108,22 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Almaty'
 
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = "Asia/Almaty"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CELERY_BEAT_SCHEDULE = {
+    'update-every-3-minutes': {
+        'task': 'app.tasks.update_database_task',
+        'schedule': timedelta(minutes=3),
+    },
+}
 
 USE_I18N = True
 

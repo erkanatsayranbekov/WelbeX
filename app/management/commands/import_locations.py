@@ -8,10 +8,7 @@ class Command(BaseCommand):
     help = 'Import locations from uszips.csv'
 
     def handle(self, *args, **options):
-        if settings.DEBUG:
-            csv_file = 'app\\management\\commands\\uszips.csv'
-        else:
-            csv_file = os.path.join(settings.BASE_DIR, 'app/management/commands/uszips.csv')
+        csv_file = os.path.join(settings.BASE_DIR, 'app/management/commands/uszips.csv')
         try:
             data = pd.read_csv(csv_file, encoding='utf-8',  dtype={'zip': str})
         except FileNotFoundError:

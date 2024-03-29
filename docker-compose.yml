@@ -7,17 +7,17 @@ services:
     ports:
       - "8000:8000"
     environment:
+      - PG_HOST=db
       - PG_USER=postgres
       - PG_PASSWORD=postgres
       - PG_DB=postgres
       - PG_PORT=5432
-      - PG_HOST=db
       - DEBUG=False
     depends_on:
       - db
       - redis
-      - celery_beat
-      - celery_worker
+    volumes:
+      - .:/app
 
   db:
     container_name: db
@@ -46,14 +46,22 @@ services:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - DJANGO_SETTINGS_MODULE=WelbeX.settings
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PG_HOST=db
+      - PG_USER=postgres
+      - PG_PASSWORD=postgres
+      - PG_DB=postgres
+      - PG_PORT=5432
+      - DEBUG=False
     depends_on:
       - redis
       - db
       - celery_worker
+      - welbex
     volumes:
       - .:/app
-      - /usr/local/lib/python3.9/site-packages/
-      - /usr/lib/python3.9/site-packages/
 
   celery_worker:
     container_name: celery_worker
@@ -64,13 +72,21 @@ services:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - DJANGO_SETTINGS_MODULE=WelbeX.settings
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PG_HOST=db
+      - PG_USER=postgres
+      - PG_PASSWORD=postgres
+      - PG_DB=postgres
+      - PG_PORT=5432
+      - DEBUG=False
     depends_on:
       - redis
       - db
+      - welbex
     volumes:
       - .:/app
-      - /usr/local/lib/python3.9/site-packages/
-      - /usr/lib/python3.9/site-packages/
 
 volumes:
   pgdata: {}

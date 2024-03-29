@@ -2,6 +2,7 @@ import pandas as pd
 from django.core.management.base import BaseCommand
 from app.models import Location
 from django.conf import settings
+from django.db.utils import IntegrityError
 import os
 
 class Command(BaseCommand):
@@ -15,12 +16,16 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f'File {csv_file} not found.'))
             return
         for index, row in data.iterrows():
-            Location.objects.create(
-                city=row['city'],
-                state=row['state_id'],
-                zip_code=row['zip'],
-                latitude=float(row['lat']),
-                longitude=float(row['lng']),
-            )
+            try:
+                Location.objects.create(
+                    city=row['city'],
+                    state=row['state_id'],
+                    zip_code=row['zip'],
+                    latitude=float(row['lat']),
+                    longitude=float(row['lng']),
+                )
+            except IntegrityError as e:
+                self.stdout.write(self.style.SUCCESS('Locations already exists'))
+                return
 
         self.stdout.write(self.style.SUCCESS('Locations imported successfully'))

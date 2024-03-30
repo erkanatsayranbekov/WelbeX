@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-h7o83$*b0dpcpn_-uz8g_e)nm%!0v4z0fsx=()fbfp*+h0=%r&'
 
-DEBUG = getenv('DEBUG', 'False') == 'True'
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -60,24 +60,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'WelbeX.wsgi.application'
 
 
-if DEBUG is True:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': getenv('PG_DB'),
+        'USER': getenv('PG_USER'),
+        'PASSWORD': getenv('PG_PASSWORD'),
+        'HOST': getenv('PG_HOST'),
+        'PORT': getenv('PG_PORT'),
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': getenv('PG_DB'),
-            'USER': getenv('PG_USER'),
-            'PASSWORD': getenv('PG_PASSWORD'),
-            'HOST': getenv('PG_HOST'),
-            'PORT': getenv('PG_PORT'),
-        }
-    }
+}
 
 
 AUTH_PASSWORD_VALIDATORS = [

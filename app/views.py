@@ -48,16 +48,15 @@ class CargoViewSet(viewsets.ModelViewSet):
         data = []
         for cargo in serializer.data:
             pick_up = cargo['pick_up']
-            delivery = cargo['delivery']
             location_pick_up = Location.objects.get(pk=pick_up)
-            vehicles = Vehicle.objects.filter(current_location=location_pick_up)
+            vehicles = Vehicle.objects.all()
             vehicles_in_range = []
             for vehicle in vehicles:
                 distance_to_vehicle = distance(
                     (location_pick_up.latitude, location_pick_up.longitude),
                     (vehicle.current_location.latitude, vehicle.current_location.longitude)).miles
                 if distance_to_vehicle <= 450:
-                    vehicles_in_range.append(vehicle.id)
+                    vehicles_in_range.append(vehicle.unique_number)
             cargo['number_of_vehicles_in_range'] = len(vehicles_in_range)
             data.append(cargo)
         return Response(data)
